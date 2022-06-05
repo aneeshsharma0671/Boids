@@ -16,7 +16,7 @@ public class BoidsHandler : MonoBehaviour
         Vector2 A = PlayGroundArea;
         for (int i = 0; i < NoOfBoids; i++)
         {
-            GameObject obj = Instantiate(BoidPrefab,new Vector3(Random.Range(-(A.x/2)+0.001f,(A.x/2)-0.001f),Random.Range(-(A.y/2)+-0.001f,(A.y/2)-0.001f)),Quaternion.identity);
+            GameObject obj = Instantiate(BoidPrefab,new Vector3(Random.Range(-(A.x/2)+0.01f,(A.x/2)-0.01f),Random.Range(-(A.y/2)+0.01f,(A.y/2)-0.01f)),Quaternion.identity);
             obj.transform.SetParent(BoidParent.transform);
             Boids boid = obj.GetComponent<Boids>();
             boid.Initialize(PlayGroundArea);

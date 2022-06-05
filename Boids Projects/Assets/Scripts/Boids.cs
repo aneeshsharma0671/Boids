@@ -25,11 +25,11 @@ public class Boids : MonoBehaviour
         Vector2 newPos = transform.position;
         if(transform.position.x > Area.x/2 || transform.position.x < -Area.x/2)
         {
-            newPos.x = -newPos.x;
+            newPos.x = -newPos.x + (newPos.x>0?0.01f:-0.01f);
         }
         if(transform.position.y > Area.y/2 || transform.position.y < -Area.y/2)
         {
-            newPos.y = -newPos.y;
+            newPos.y = -newPos.y+ (newPos.y>0?0.01f:-0.01f);
         }
 
         transform.position = new Vector3(newPos.x,newPos.y,0);
@@ -38,7 +38,7 @@ public class Boids : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = new Color(1,0,0,1);
-        Vector3 endPoint = new Vector3(transform.position.x + Velocity.x,transform.position.y + Velocity.y,0);
+        Vector3 endPoint = new Vector3(transform.position.x + 0.5f*Velocity.x,transform.position.y + 0.5f*Velocity.y,0);
         Gizmos.DrawLine(transform.position,endPoint);
     }
 }
