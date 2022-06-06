@@ -1,23 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Boids : MonoBehaviour
 {
+    public BoidData boidData;
     public Vector2 Area = new Vector2(2,2);
-    Vector2 forward = new Vector2(0,0);
-    Vector2 Velocity = new Vector2(0,0);
-    public void Initialize(Vector2 area)
+    public void Initialize(Vector2 area,BoidData data)
     {
         Area = area;
-        Vector2 A = Area;
-        Velocity = new Vector2(Random.Range(-(A.x/2),(A.x/2)),Random.Range(-(A.y/2),(A.y/2)));
-        Velocity.Normalize();
+        boidData = data;
+        transform.position = new Vector3(boidData.Position.x,boidData.Position.y,0);
     }
     public void BoidUpdate()
     {
         WrapinArea();
-        transform.position += new Vector3(Velocity.x,Velocity.y,0)*Time.deltaTime;
+
+        Vector2 Acceleration = Vector2.zero;
+        Vector2 Velocity = boidData.Velocity;
+
+        Vector2 SeperationForce = boidData.AvoidanceDir*5f;
+        Acceleration += SeperationForce;
+
+        Velocity += Acceleration*Time.deltaTime;
+        float Speed = Velocity.magnitude;
+        Vector2 dir = Velocity/Speed;
+        Speed = Mathf.Clamp(Speed,1f,1.5f);
+
+        Velocity = dir*Speed;
+
+        boidData.Velocity = Velocity;
+        transform.position += new Vector3(boidData.Velocity.x,boidData.Velocity.y,0)*Time.deltaTime;
     }
 
     void WrapinArea()
@@ -38,7 +52,18 @@ public class Boids : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = new Color(1,0,0,1);
-        Vector3 endPoint = new Vector3(transform.position.x + 0.5f*Velocity.x,transform.position.y + 0.5f*Velocity.y,0);
+        Vector3 endPoint = new Vector3(transform.position.x + 0.5f*boidData.Velocity.x,transform.position.y + 0.5f*boidData.Velocity.y,0);
         Gizmos.DrawLine(transform.position,endPoint);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        // Gizmos.color = new Color(0,1,0,1);
+        // Gizmos.DrawWireSphere(transform.position,1.0f);
+        Handles.color = new Color(0,1,0,1);
+        Handles.DrawWireDisc(transform.position,Vector3.forward,1.0f);
+
+        Gizmos.color = new Color(0,0,1,1);
+        Gizmos.DrawLine(transform.position,transform.position + new Vector3(boidData.AvoidanceDir.x,boidData.AvoidanceDir.y,0));
     }
 }
