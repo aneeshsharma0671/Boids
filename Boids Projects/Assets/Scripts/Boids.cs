@@ -2,16 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 public class Boids : MonoBehaviour
 {
     public BoidData boidData;
+    private Transform visuals;
+    private SimulationSetting setting;
     public Vector2 Area = new Vector2(2,2);
-    public void Initialize(Vector2 area,BoidData data)
+    public void Initialize(Vector2 area,BoidData data,SimulationSetting simSetting)
     {
+        setting = simSetting;
         Area = area;
         boidData = data;
         transform.position = new Vector3(boidData.Position.x,boidData.Position.y,0);
+        visuals = gameObject.transform.GetChild(0).transform;
     }
     public void BoidUpdate()
     {
@@ -20,18 +25,32 @@ public class Boids : MonoBehaviour
         Vector2 Acceleration = Vector2.zero;
         Vector2 Velocity = boidData.Velocity;
 
-        Vector2 SeperationForce = boidData.AvoidanceDir*5f;
+        // Seperation Force
+        Vector2 SeperationForce = boidData.AvoidanceDir*setting.SeperationWeight;
         Acceleration += SeperationForce;
+        // Allignment Force
+        Vector2 AllignmentForce = boidData.AllignmentDir*setting.AllignmentWeight;
+        Acceleration += AllignmentForce;
+        // Coheision Force
+        Vector2 CoheisionForce = boidData.CohesionDir*setting.CoheisionWeight;
+        Acceleration += CoheisionForce;
 
         Velocity += Acceleration*Time.deltaTime;
         float Speed = Velocity.magnitude;
         Vector2 dir = Velocity/Speed;
         Speed = Mathf.Clamp(Speed,1f,1.5f);
+        boidData.Forward = dir;
 
         Velocity = dir*Speed;
 
         boidData.Velocity = Velocity;
         transform.position += new Vector3(boidData.Velocity.x,boidData.Velocity.y,0)*Time.deltaTime;
+        UpdateVisuals();
+    }
+
+    private void UpdateVisuals()
+    {
+        visuals.localRotation = Quaternion.Euler(0,0,Mathf.Rad2Deg*Mathf.Atan2(boidData.Forward.y,boidData.Forward.x));
     }
 
     void WrapinArea()
@@ -51,9 +70,7 @@ public class Boids : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = new Color(1,0,0,1);
-        Vector3 endPoint = new Vector3(transform.position.x + 0.5f*boidData.Velocity.x,transform.position.y + 0.5f*boidData.Velocity.y,0);
-        Gizmos.DrawLine(transform.position,endPoint);
+
     }
 
     void OnDrawGizmosSelected()
@@ -61,9 +78,19 @@ public class Boids : MonoBehaviour
         // Gizmos.color = new Color(0,1,0,1);
         // Gizmos.DrawWireSphere(transform.position,1.0f);
         Handles.color = new Color(0,1,0,1);
-        Handles.DrawWireDisc(transform.position,Vector3.forward,1.0f);
+        Handles.DrawWireDisc(transform.position,Vector3.forward,setting.PerceptionRadius);
+
+        Gizmos.color = new Color(1,0,0,1);
+        Vector3 endPoint = new Vector3(transform.position.x + 0.5f*boidData.Velocity.x,transform.position.y + 0.5f*boidData.Velocity.y,0);
+        Gizmos.DrawLine(transform.position,transform.position + new Vector3 (boidData.Forward.x,boidData.Forward.y,0)*0.5f);
+
+        Gizmos.color = new Color(0,1,1,1);
+        Gizmos.DrawLine(transform.position,transform.position + new Vector3(boidData.AllignmentDir.x,boidData.AllignmentDir.y,0)*1.5f);  
 
         Gizmos.color = new Color(0,0,1,1);
         Gizmos.DrawLine(transform.position,transform.position + new Vector3(boidData.AvoidanceDir.x,boidData.AvoidanceDir.y,0));
+
+        Handles.color = new Color(1,0,1,1);
+        Gizmos.DrawLine((Vector3)boidData.Position, (Vector3)boidData.Position + (Vector3)boidData.CohesionDir);
     }
 }

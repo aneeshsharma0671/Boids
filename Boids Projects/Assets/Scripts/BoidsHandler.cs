@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class BoidsHandler : MonoBehaviour
 {
-    public float PerceptionRadius = 1.0f;
-    public int NoOfBoids = 10;
+    public SimulationSetting setting;
     public Vector2 PlayGroundArea = new Vector2(10,10);
     public GameObject BoidParent;
     public GameObject BoidPrefab;
@@ -15,7 +14,7 @@ public class BoidsHandler : MonoBehaviour
     void Start()
     {
         Vector2 A = PlayGroundArea;
-        for (int i = 0; i < NoOfBoids; i++)
+        for (int i = 0; i < setting.NoOfBoids; i++)
         {
             GameObject obj = Instantiate(BoidPrefab);
             obj.transform.SetParent(BoidParent.transform);
@@ -24,8 +23,9 @@ public class BoidsHandler : MonoBehaviour
             data.Position = new Vector2(Random.Range(-(A.x/2)+0.01f,(A.x/2)-0.01f),Random.Range(-(A.y/2)+0.01f,(A.y/2)-0.01f));
             data.Velocity = new Vector2(Random.Range(-(A.x/2),(A.x/2)),Random.Range(-(A.y/2),(A.y/2)));
             data.Velocity.Normalize();
+            data.Forward = data.Velocity;
             data.Neighbours = new List<Boids>();
-            boid.Initialize(PlayGroundArea,data);
+            boid.Initialize(PlayGroundArea,data,setting);
             boids.Add(boid);
         }
     }
@@ -43,7 +43,7 @@ public class BoidsHandler : MonoBehaviour
             {
                 if(boid != subBoid )
                 {
-                    if(Vector2.Distance(boid.boidData.Position,subBoid.boidData.Position) < PerceptionRadius)
+                    if(Vector2.Distance(boid.boidData.Position,subBoid.boidData.Position) < setting.PerceptionRadius)
                     {
                         if(!boid.boidData.Neighbours.Contains(subBoid))
                         {
@@ -66,12 +66,18 @@ public class BoidsHandler : MonoBehaviour
         {
             Vector2 avoidanceForce = new Vector2(0,0);
             Vector2 AverageDir = new Vector2(0,0);
+            Vector2 AvegareForward = new Vector2(0,0);
+            Vector2 CentreOfFlock = new Vector2(0,0);
             foreach(Boids neighbor in boid.boidData.Neighbours)
             {
                 AverageDir += (neighbor.boidData.Position - boid.boidData.Position);
+                AvegareForward += neighbor.boidData.Forward;
+                CentreOfFlock += neighbor.boidData.Position/boid.boidData.Neighbours.Count;
             }
             avoidanceForce = (AverageDir.normalized)*-1;
             boid.boidData.AvoidanceDir = avoidanceForce;
+            boid.boidData.CohesionDir = (CentreOfFlock - boid.boidData.Position).normalized;
+            boid.boidData.AllignmentDir = AvegareForward.normalized;
         }
 
         foreach (Boids boid in boids)
@@ -98,4 +104,6 @@ public struct BoidData
     public Vector2 Area;
     public List<Boids> Neighbours;
     public Vector2 AvoidanceDir;
+    public Vector2 AllignmentDir;
+    public Vector2 CohesionDir;
 }
