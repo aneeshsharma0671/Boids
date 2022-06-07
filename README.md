@@ -4,7 +4,7 @@ In this project I have implemented a Boids simulation in Unity, using a set of s
 A Distributed Behavioral Model](http://www.cs.toronto.edu/~dt/siggraph97-course/cwr87/)
 
 ## Simulation
-First I atarted with a simple 2D simulation of Boids in unity.
+First I started with a simple 2D simulation.
 ### Setting up the simulation environment
 For the environment I have used a rectangular area with specified width and height that you can control as a simulation settings parameter and with wrap around walls just like in classic asteroid game, then I am instantiating the Boids game object in this play area with a random position and a random velocity.
 
