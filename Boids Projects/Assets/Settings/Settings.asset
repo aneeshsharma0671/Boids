@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoOfBoids: 40
   PerceptionRadius: 1
-  SeperationWeight: 5.46
-  AllignmentWeight: 3.16
-  CoheisionWeight: 1.86
+  SeperationWeight: 0
+  AllignmentWeight: 0
+  CoheisionWeight: 0

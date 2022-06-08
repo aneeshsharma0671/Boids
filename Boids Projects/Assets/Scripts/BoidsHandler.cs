@@ -5,7 +5,6 @@ using UnityEngine;
 public class BoidsHandler : MonoBehaviour
 {
     public SimulationSetting setting;
-    public Vector2 PlayGroundArea = new Vector2(10,10);
     public GameObject BoidParent;
     public GameObject BoidPrefab;
     public Color GizmosColor;
@@ -13,7 +12,7 @@ public class BoidsHandler : MonoBehaviour
 
     void Start()
     {
-        Vector2 A = PlayGroundArea;
+        Vector2 A =  setting.PlayGroundArea;
         for (int i = 0; i < setting.NoOfBoids; i++)
         {
             GameObject obj = Instantiate(BoidPrefab);
@@ -25,7 +24,7 @@ public class BoidsHandler : MonoBehaviour
             data.Velocity.Normalize();
             data.Forward = data.Velocity;
             data.Neighbours = new List<Boids>();
-            boid.Initialize(PlayGroundArea,data,setting);
+            boid.Initialize(setting.PlayGroundArea,data,setting);
             boids.Add(boid);
         }
     }
@@ -89,7 +88,7 @@ public class BoidsHandler : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = GizmosColor;
-        Gizmos.DrawWireCube(new Vector3(0,0,0),new Vector3(PlayGroundArea.x,PlayGroundArea.y,0));
+        Gizmos.DrawWireCube(new Vector3(0,0,0),new Vector3(setting.PlayGroundArea.x,setting.PlayGroundArea.y,0));
     }
 
 

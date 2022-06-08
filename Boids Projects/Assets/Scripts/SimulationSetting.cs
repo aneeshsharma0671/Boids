@@ -5,6 +5,7 @@ using UnityEngine;
 public class SimulationSetting : ScriptableObject
 {
     public int NoOfBoids = 20;
+    public Vector2 PlayGroundArea = new Vector2(10,10);
     [Range(0,10)]
     public float PerceptionRadius = 1.5f;
     [Header("Weights")]

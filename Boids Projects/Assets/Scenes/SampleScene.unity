@@ -138,7 +138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &489834393
 Transform:
   m_ObjectHideFlags: 0
@@ -778,7 +778,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   setting: {fileID: 11400000, guid: 4671746eebc3e83488cf8e94f08bafc1, type: 2}
-  PlayGroundArea: {x: 15, y: 10}
   BoidParent: {fileID: 2088033928}
   BoidPrefab: {fileID: 3326680038932420605, guid: b0b172dff24774c43af4f4bbde036361, type: 3}
   GizmosColor: {r: 1, g: 1, b: 1, a: 1}
