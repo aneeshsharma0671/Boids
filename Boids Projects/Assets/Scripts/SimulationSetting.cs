@@ -9,6 +9,8 @@ public class SimulationSetting : ScriptableObject
     [Range(0,10)]
     public float PerceptionRadius = 1.5f;
     [Header("Weights")]
+    [Range(0,20)]
+    public float ObstacleAvoidanceWeight = 20f;
     [Range(0,10)]
     public float SeperationWeight = 1f;
     [Range(0,10)]

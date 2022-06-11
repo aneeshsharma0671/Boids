@@ -67,16 +67,32 @@ public class BoidsHandler : MonoBehaviour
             Vector2 AverageDir = new Vector2(0,0);
             Vector2 AvegareForward = new Vector2(0,0);
             Vector2 CentreOfFlock = new Vector2(0,0);
+            Vector2 ObstacleAvoidance = new Vector2(0,0);
             foreach(Boids neighbor in boid.boidData.Neighbours)
             {
                 AverageDir += (neighbor.boidData.Position - boid.boidData.Position);
                 AvegareForward += neighbor.boidData.Forward;
                 CentreOfFlock += neighbor.boidData.Position/boid.boidData.Neighbours.Count;
             }
+
+            // Obstacle avoidance
+            Ray ray = new Ray(boid.boidData.Position,boid.boidData.Forward);
+            Debug.DrawRay(boid.boidData.Position,boid.boidData.Forward*setting.PerceptionRadius,Color.gray);
+            if(Physics.Raycast(ray,out RaycastHit hit,setting.PerceptionRadius))
+            {
+                ObstacleAvoidance =  new Vector2(boid.boidData.Forward.y,-boid.boidData.Forward.x);
+                boid.boidData.isHeadingToObstacle = true;
+            }
+            else
+            {
+                boid.boidData.isHeadingToObstacle = false;
+            }
+
             avoidanceForce = (AverageDir.normalized)*-1;
             boid.boidData.AvoidanceDir = avoidanceForce;
             boid.boidData.CohesionDir = (CentreOfFlock - boid.boidData.Position).normalized;
             boid.boidData.AllignmentDir = AvegareForward.normalized;
+            boid.boidData.ObstacleAvoidanceDir = ObstacleAvoidance.normalized;
         }
 
         foreach (Boids boid in boids)
@@ -105,4 +121,7 @@ public struct BoidData
     public Vector2 AvoidanceDir;
     public Vector2 AllignmentDir;
     public Vector2 CohesionDir;
+    public Vector2 ObstacleAvoidanceDir;
+    // [HideInInspector]
+    public bool isHeadingToObstacle;
 }

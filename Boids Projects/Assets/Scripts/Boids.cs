@@ -24,7 +24,12 @@ public class Boids : MonoBehaviour
 
         Vector2 Acceleration = Vector2.zero;
         Vector2 Velocity = boidData.Velocity;
-
+        //Obstacle Avoidance Dir 
+        if(boidData.isHeadingToObstacle)
+        {
+            Vector2 ObstacleAvoidanceDir = boidData.ObstacleAvoidanceDir;
+            Acceleration += ObstacleAvoidanceDir*setting.ObstacleAvoidanceWeight;
+        }
         // Seperation Force
         Vector2 SeperationForce = boidData.AvoidanceDir*setting.SeperationWeight;
         Acceleration += SeperationForce;
@@ -92,5 +97,8 @@ public class Boids : MonoBehaviour
 
         Handles.color = new Color(1,0,1,1);
         Gizmos.DrawLine((Vector3)boidData.Position, (Vector3)boidData.Position + (Vector3)boidData.CohesionDir);
+
+        Handles.color = new Color(0.5f,0.5f,1,1);
+        Gizmos.DrawLine((Vector3)boidData.Position, (Vector3)boidData.Position + (Vector3)boidData.ObstacleAvoidanceDir);
     }
 }

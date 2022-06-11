@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88066c4296b9e734eb89188be3ea5265, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  NoOfBoids: 40
+  NoOfBoids: 1
+  PlayGroundArea: {x: 10, y: 10}
   PerceptionRadius: 1
-  SeperationWeight: 0
-  AllignmentWeight: 0
-  CoheisionWeight: 0
+  SeperationWeight: 5.18
+  AllignmentWeight: 3.56
+  CoheisionWeight: 2.02
