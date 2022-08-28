@@ -30,15 +30,19 @@ public class Boids : MonoBehaviour
             Vector2 ObstacleAvoidanceDir = boidData.ObstacleAvoidanceDir;
             Acceleration += ObstacleAvoidanceDir*setting.ObstacleAvoidanceWeight;
         }
-        // Seperation Force
-        Vector2 SeperationForce = boidData.AvoidanceDir*setting.SeperationWeight;
-        Acceleration += SeperationForce;
-        // Allignment Force
-        Vector2 AllignmentForce = boidData.AllignmentDir*setting.AllignmentWeight;
-        Acceleration += AllignmentForce;
-        // Coheision Force
-        Vector2 CoheisionForce = boidData.CohesionDir*setting.CoheisionWeight;
-        Acceleration += CoheisionForce;
+
+        if(boidData.Neighbours.Count > 0)
+        {
+            // Seperation Force
+            Vector2 SeperationForce = boidData.AvoidanceDir*setting.SeperationWeight;
+            Acceleration += SeperationForce;
+            // Allignment Force
+            Vector2 AllignmentForce = boidData.AllignmentDir*setting.AllignmentWeight;
+            Acceleration += AllignmentForce;
+            // Coheision Force
+            Vector2 CoheisionForce = boidData.CohesionDir*setting.CoheisionWeight;
+            Acceleration += CoheisionForce;
+        }
 
         Velocity += Acceleration*Time.deltaTime;
         float Speed = Velocity.magnitude;
@@ -75,7 +79,6 @@ public class Boids : MonoBehaviour
 
     void OnDrawGizmos()
     {
-
     }
 
     void OnDrawGizmosSelected()

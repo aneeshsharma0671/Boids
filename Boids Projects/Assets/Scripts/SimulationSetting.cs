@@ -8,6 +8,12 @@ public class SimulationSetting : ScriptableObject
     public Vector2 PlayGroundArea = new Vector2(10,10);
     [Range(0,10)]
     public float PerceptionRadius = 1.5f;
+    [Range(0,10)]
+    public float ObstacleDetectionRaysLength = 1.5f;
+    [Range(1,360)]
+    public float PerceptionAngle = 180f;
+    [Range(0,360)]
+    public int NoOfRays = 10;
     [Header("Weights")]
     [Range(0,20)]
     public float ObstacleAvoidanceWeight = 20f;

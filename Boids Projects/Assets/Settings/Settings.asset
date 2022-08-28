@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoOfBoids: 1
   PlayGroundArea: {x: 10, y: 10}
-  PerceptionRadius: 1
+  PerceptionRadius: 1.9
+  ObstacleDetectionRaysLength: 1.5
+  PerceptionAngle: 270
+  NoOfRays: 27
+  ObstacleAvoidanceWeight: 20
   SeperationWeight: 5.18
   AllignmentWeight: 3.56
-  CoheisionWeight: 2.02
+  CoheisionWeight: 2.65

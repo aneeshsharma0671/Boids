@@ -80,7 +80,8 @@ public class BoidsHandler : MonoBehaviour
             Debug.DrawRay(boid.boidData.Position,boid.boidData.Forward*setting.PerceptionRadius,Color.gray);
             if(Physics.Raycast(ray,out RaycastHit hit,setting.PerceptionRadius))
             {
-                ObstacleAvoidance =  new Vector2(boid.boidData.Forward.y,-boid.boidData.Forward.x);
+
+                ObstacleAvoidance =  GetAvoidanceDir(boid.boidData.Position,boid.boidData.Forward);
                 boid.boidData.isHeadingToObstacle = true;
             }
             else
@@ -107,6 +108,24 @@ public class BoidsHandler : MonoBehaviour
         Gizmos.DrawWireCube(new Vector3(0,0,0),new Vector3(setting.PlayGroundArea.x,setting.PlayGroundArea.y,0));
     }
 
+    private Vector2 GetAvoidanceDir(Vector2 position,Vector2 forward)
+    {
+        Ray ray = new Ray(position,forward);
+        Vector2 dir = forward;
+        for(int i = 0;i<setting.NoOfRays;i++)
+        {
+            Vector2 rotatedDir = Quaternion.Euler(0,0,i*(setting.PerceptionAngle/(setting.NoOfRays*2)) *((i%2 == 0)?-1:1))*dir;
+            rotatedDir.Normalize();
+            ray = new Ray(position,rotatedDir);
+            if(!Physics.Raycast(ray,out RaycastHit hit,setting.PerceptionRadius))
+            {
+                Debug.DrawLine(position,position+rotatedDir*setting.PerceptionRadius,Color.green);
+                return rotatedDir;
+            }
+                Debug.DrawLine(position,position+rotatedDir*setting.PerceptionRadius,Color.red);
+        }
+        return dir;
+    }
 
 }
 
